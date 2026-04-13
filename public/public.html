@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Okuma Modu - Tyke Documents</title>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <style>
+    body { background: var(--bg-primary); color: var(--text-primary); padding: 40px; display: flex; justify-content: center; }
+    .public-paper { max-width: 900px; width: 100%; background: white; padding: 60px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: var(--radius-md); }
+    body.dark-mode .public-paper { background: var(--bg-secondary); box-shadow: none; border: 1px solid var(--border-color); }
+    h1.public-title { font-size: 32px; margin-bottom: 30px; font-weight: 700; border-bottom: 2px solid var(--border-color); padding-bottom: 20px;}
+    .ql-editor { padding: 0 !important; }
+  </style>
+</head>
+<body>
+  <div class="public-paper">
+    <h1 class="public-title" id="pub-title">Yükleniyor...</h1>
+    <div id="pub-content" class="ql-editor"></div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const docId = urlParams.get('id');
+      if (!docId) return document.getElementById('pub-title').textContent = 'Hata: Kimlik (ID) bulunamadı.';
+      
+      try {
+        const res = await fetch(`/api/documents/public/${docId}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        
+        document.title = data.title + ' - Tyke Documents';
+        document.getElementById('pub-title').textContent = data.title;
+        document.getElementById('pub-content').innerHTML = data.content;
+        
+        // Highlight.js and Mermaid parsing (if loaded)
+        document.querySelectorAll('pre').forEach((block) => { try{ hljs.highlightElement(block); }catch(e){} });
+        if(typeof mermaid !== 'undefined') {
+          mermaid.initialize({ startOnLoad: false });
+          document.querySelectorAll('pre.ql-syntax').forEach(async el => {
+            if (el.textContent.startsWith('graph ') || el.textContent.startsWith('sequenceDiagram')) {
+              const div = document.createElement('div');
+              div.style.textAlign = 'center'; div.style.margin = '20px 0';
+              div.innerHTML = el.textContent;
+              el.after(div);
+              mermaid.init(undefined, div);
+            }
+          });
+        }
+      } catch(e) {
+        document.getElementById('pub-title').textContent = e.message;
+      }
+    });
+  </script>
+</body>
+</html>

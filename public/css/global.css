@@ -1,0 +1,165 @@
+/* public/css/global.css */
+:root {
+  /* Apple HIG / Modern Minimalist Palette */
+  --color-black: #050505;
+  --color-gray-900: #151515;
+  --color-gray-800: #202022;
+  --color-gray-700: #3a3a3c;
+  --color-gray-600: #636366;
+  --color-gray-400: #aeaeb2;
+  --color-gray-300: #d1d1d6;
+  --color-gray-200: #e5e5ea;
+  --color-gray-100: #f2f2f7;
+  --color-gray-50: #fbfbfd;
+  --color-white: #ffffff;
+
+  --accent-color: #0071e3;
+  /* Subtle blue for active states if needed, but keeping monochrome focus */
+  --accent-hover: #0077ed;
+
+  /* Theme variables (Light Default) */
+  --bg-primary: var(--color-gray-50);
+  --bg-secondary: var(--color-white);
+  --text-primary: var(--color-black);
+  --text-secondary: var(--color-gray-600);
+  --border-color: rgba(0, 0, 0, 0.08);
+  /* Soft border */
+  --primary-color: var(--color-black);
+  --primary-hover: var(--color-gray-800);
+
+  /* Advanced Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.4);
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html.dark-theme {
+  --bg-primary: var(--color-black);
+  --bg-secondary: var(--color-gray-900);
+  --text-primary: var(--color-gray-50);
+  --text-secondary: var(--color-gray-400);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --primary-color: var(--color-white);
+  --primary-hover: var(--color-gray-200);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+
+  --glass-bg: rgba(21, 21, 21, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.frosted-glass {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-right: 1px solid var(--border-color);
+}
+
+/* Base Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--bg-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-text {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn-text:hover {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.hide {
+  display: none !important;
+}
+
+.text-danger {
+  color: #ff3b30 !important;
+}
+
+/* Apple Red */
+
+/* Performance Mode */
+html.performance-mode * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.performance-mode .frosted-glass,
+html.performance-mode .topbar,
+html.performance-mode .editor-header {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: var(--bg-secondary) !important;
+}

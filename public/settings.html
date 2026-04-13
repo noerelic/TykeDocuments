@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayarlar - Tyke Documents</title>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar frosted-glass">
+      <div class="sidebar-logo">
+        <img src="https://i.imgur.com/kAwKJxV.png" alt="Tyke Documents Logo">
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Ana Sayfa
+        </a>
+        <a href="settings.html" class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          Ayarlar
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-text">
+          <svg viewBox="0 0 24 24" width="20" height="20" style="margin-right:8px;" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Çıkış Yap
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h1>Ayarlar</h1>
+        <div class="avatar" id="user-avatar" title="Profil">U</div>
+      </header>
+
+      <div class="content-body">
+        <div class="settings-container">
+
+          <div class="settings-header">
+            <h2>Uygulama Tercihleri</h2>
+            <p>Görünüm ve genel deneyim ayarlarınızı buradan yönetin.</p>
+          </div>
+
+          <div class="settings-card">
+            <div class="setting-group">
+              <div class="setting-info">
+                <h3>Karanlık Mod</h3>
+                <p>Göz yorgunluğunu azaltmak için ortam ışığına uygun karanlık temaya geçiş yapın.</p>
+              </div>
+              <div class="setting-action">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="theme-toggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-info">
+                <h3>Performans Modu</h3>
+                <p>Animasyonları ve cam efektlerini kaparak zayıf cihazlarda sayfa hızını maksimuma çıkarır.</p>
+              </div>
+              <div class="setting-action">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="perf-toggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-info">
+                <h3>Otomatik Kayıt Sıklığı</h3>
+                <p>Editörde yazı yazarken dokümanınızın ne sıklıkla veri tabanına kaydedileceğini belirler.</p>
+              </div>
+              <div class="setting-action">
+                <select id="autosave-select"
+                  style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family:var(--font-family); outline:none;">
+                  <option value="1000">1 Saniye</option>
+                  <option value="2000" selected>2 Saniye (Standart)</option>
+                  <option value="5000">5 Saniye</option>
+                  <option value="10000">10 Saniye</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-header" style="margin-top: 48px;">
+            <h2>Hesap ve Depolama</h2>
+            <p>Verilerinizi ve kullanım limitlerinizi gözden geçirin.</p>
+          </div>
+
+          <div class="settings-card">
+            <div class="setting-group" style="display: block;">
+              <div class="setting-info" style="padding-right:0;">
+                <h3>Depolama Alanı</h3>
+                <p>Toplam kapasite sınırı: 50 MB / Belge sınırı yok</p>
+                <div class="storage-bar-bg">
+                  <div class="storage-bar-fill" id="storage-bar"></div>
+                </div>
+                <div class="storage-details">
+                  <span>Kullanılan: <strong id="storage-mb">0.00</strong> MB (<span id="doc-count">0</span>
+                    Doküman)</span>
+                  <span>50 MB Toplam</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    // Set Avatar Initials
+    const username = localStorage.getItem('tyke_username') || 'U';
+    document.getElementById('user-avatar').textContent = username.charAt(0).toUpperCase();
+
+    // Theme logic
+    const themeToggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('theme') === 'dark') {
+      themeToggle.checked = true;
+    }
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        document.documentElement.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Performance Mode logic
+    const perfToggle = document.getElementById('perf-toggle');
+    if (localStorage.getItem('performance_mode') === 'true') {
+      perfToggle.checked = true;
+    }
+    perfToggle.addEventListener('change', () => {
+      if (perfToggle.checked) {
+        document.documentElement.classList.add('performance-mode');
+        localStorage.setItem('performance_mode', 'true');
+      } else {
+        document.documentElement.classList.remove('performance-mode');
+        localStorage.setItem('performance_mode', 'false');
+      }
+    });
+
+    // Autosave Select logic
+    const autosaveSelect = document.getElementById('autosave-select');
+    const savedAutoSave = localStorage.getItem('autosave');
+    if (savedAutoSave) {
+      autosaveSelect.value = savedAutoSave;
+    }
+    autosaveSelect.addEventListener('change', (e) => {
+      localStorage.setItem('autosave', e.target.value);
+    });
+
+    // Load user storage info
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const data = await window.TykeAPI.request('/api/user/storage');
+        document.getElementById('doc-count').textContent = data.count;
+        document.getElementById('storage-mb').textContent = parseFloat(data.mb).toFixed(2);
+
+        // Calculate percentage
+        let percent = (parseFloat(data.mb) / 50) * 100;
+        if (percent > 100) percent = 100;
+
+        // Allow time for CSS transition
+        setTimeout(() => {
+          document.getElementById('storage-bar').style.width = `${percent}%`;
+        }, 100);
+
+      } catch (e) {
+        console.error("Storage fetching failed");
+      }
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      window.TykeAPI.logout();
+    });
+  </script>
+</body>
+
+</html>

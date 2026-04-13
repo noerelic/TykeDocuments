@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editör - Tyke Documents</title>
+  <script src="js/theme.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/editor.css">
+
+  <!-- Quill & Formatting Libs -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lato&family=Lora&family=Merriweather&family=Montserrat:wght@400;600&family=Open+Sans&family=Oswald&family=Playfair+Display&family=Raleway&family=Roboto+Mono&family=Roboto:wght@400;500;700&family=Ubuntu&display=swap"
+    rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body class="editor-body">
+
+  <!-- Command Palette / Spotlight -->
+  <div id="command-palette" class="modal hide">
+    <div class="cmd-content">
+      <input type="text" id="cmd-input" placeholder="Komut yazın veya JSON'da arayın... (CMD/CTRL + K)"
+        autocomplete="off">
+      <div id="cmd-results" class="cmd-results">
+        <!-- Results JS ile gelecek -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-Tab Top Bar -->
+  <div class="tabs-container" id="tabs-container">
+    <!-- Tabs JS ile render edilecek -->
+  </div>
+
+  <header class="editor-header frosted-glass">
+    <div class="editor-header-left">
+      <a href="index.html" class="back-link" title="Ana Sayfaya Dön">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+      <div class="doc-info">
+        <input type="text" id="doc-title" value="Başlıksız Doküman" class="doc-title-input">
+        <div class="menubar">
+          <button class="menu-btn" id="menu-file">Dosya</button>
+          <div class="menu-dropdown hide" id="dropdown-file">
+            <button id="btn-version-history">Versiyon Geçmişi</button>
+            <button id="btn-export-pdf">PDF Olarak İndir</button>
+            <button id="btn-export-epub">EPub Olarak İndir (Beta)</button>
+            <button id="btn-export-tdtf">Tyke Dosyası İndir (.tdtf)</button>
+            <button id="btn-public-link">Ziyaretçi Linki (Public)</button>
+            <button id="btn-presentation">Sunum Modu (Present)</button>
+            <button id="btn-delete-doc" class="btn-delete text-danger">Dokümanı Sil</button>
+          </div>
+          <button class="menu-btn" onclick="document.querySelector('.ql-clean').click()">Biçimi Temizle</button>
+        </div>
+      </div>
+    </div>
+    <div class="editor-header-right">
+      <button id="btn-ai-chat" class="btn-icon" title="Tyke AI Chat">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
+      <button id="btn-ai-assist" class="btn-icon" title="Hızlı AI İşlemleri">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+          </path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+      </button>
+      <button id="btn-zen-mode" class="btn-icon" title="Odaklanma Modu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+          </path>
+        </svg>
+      </button>
+      <span id="save-status" class="save-status">Değişiklikler kaydedildi</span>
+      <button id="save-btn" class="btn btn-primary btn-sm">Kaydet</button>
+    </div>
+  </header>
+
+  <!-- Quill Toolbar -->
+  <div id="toolbar-container" class="toolbar frosted-glass">
+    <span class="ql-formats">
+      <select class="ql-font">
+        <option selected value="inter">Inter</option>
+        <option value="roboto">Roboto</option>
+        <option value="opensans">Open Sans</option>
+        <option value="lato">Lato</option>
+        <option value="montserrat">Montserrat</option>
+        <option value="oswald">Oswald</option>
+        <option value="raleway">Raleway</option>
+        <option value="ubuntu">Ubuntu</option>
+        <option value="playfair">Playfair</option>
+        <option value="lora">Lora</option>
+        <option value="merriweather">Merriweather</option>
+        <option value="monospace">Monospace</option>
+      </select>
+      <select class="ql-size">
+        <option value="8px">8</option>
+        <option value="10px">10</option>
+        <option value="12px">12</option>
+        <option value="14px" selected>14</option>
+        <option value="16px">16</option>
+        <option value="20px">20</option>
+        <option value="24px">24</option>
+        <option value="36px">36</option>
+        <option value="48px">48</option>
+        <option value="72px">72</option>
+      </select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-bold"></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-strike"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-formula"></button>
+      <button class="ql-code-block"></button>
+    </span>
+    <span class="ql-formats" style="display:flex; align-items:center; gap:8px;">
+      <div
+        style="position:relative; width: 28px; height: 28px; border:1px solid #ccc; border-radius:4px; overflow:hidden;"
+        title="Metin Rengi">
+        <input type="color" id="custom-text-color"
+          style="position:absolute; top:-10px; left:-10px; width:50px; height:50px; cursor:pointer;" value="#000000">
+        <span
+          style="position:absolute; bottom:2px; left:0; width:100%; text-align:center; font-size:10px; pointer-events:none; font-weight:bold;">A</span>
+      </div>
+      <div
+        style="position:relative; width: 28px; height: 28px; border:1px solid #ccc; border-radius:4px; overflow:hidden;"
+        title="Vurgu Rengi">
+        <input type="color" id="custom-bg-color"
+          style="position:absolute; top:-10px; left:-10px; width:50px; height:50px; cursor:pointer;" value="#ffffff">
+        <span
+          style="position:absolute; bottom:2px; left:0; width:100%; text-align:center; font-size:10px; pointer-events:none;">🖌️</span>
+      </div>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-list" value="ordered"></button>
+      <button class="ql-list" value="bullet"></button>
+      <button class="ql-indent" value="-1"></button>
+      <button class="ql-indent" value="+1"></button>
+    </span>
+    <span class="ql-formats">
+      <select class="ql-align"></select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-link"></button>
+      <button class="ql-image"></button>
+    </span>
+    <span class="ql-formats flex-right">
+      <button id="custom-undo"><svg viewBox="0 0 24 24">
+          <path d="M9 14L4 9l5-5" stroke="currentColor" fill="none" stroke-width="2" />
+          <path d="M4 9h11a5 5 0 0 1 5 5v3" stroke="currentColor" fill="none" stroke-width="2" />
+        </svg></button>
+      <button id="custom-redo"><svg viewBox="0 0 24 24">
+          <path d="M15 14l5-5-5-5" stroke="currentColor" fill="none" stroke-width="2" />
+          <path d="M20 9H9a5 5 0 0 0-5 5v3" stroke="currentColor" fill="none" stroke-width="2" />
+        </svg></button>
+    </span>
+  </div>
+
+  <div class="workspace-wrapper">
+    <!-- TOC Sidebar -->
+    <aside id="toc-sidebar" class="toc-sidebar">
+      <div class="toc-title">İçindekiler</div>
+      <ul id="toc-list" class="toc-list"></ul>
+    </aside>
+
+    <main class="editor-workspace">
+      <div id="noise-overlay" class="noise-overlay"></div>
+      <div id="editor-container" class="a4-paper"></div>
+    </main>
+
+    <!-- AI Chat Sidebar -->
+    <aside id="ai-sidebar" class="ai-sidebar hide">
+      <div class="ai-header">
+        Tyke AI Asistanı
+        <button id="close-ai-sidebar">&times;</button>
+      </div>
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="ai-message system">Merhaba, size bu belgeyle ilgili nasıl yardımcı olabilirim? Geliştirmemi,
+          metninizi iyileştirmemi isteyebilirsiniz.</div>
+      </div>
+      <div class="ai-input-area">
+        <input type="text" id="ai-chat-input" placeholder="Bana bir şey sor..." autocomplete="off">
+        <button id="ai-chat-send" class="btn btn-primary btn-sm">Gönder</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Modals -->
+  <div id="ai-modal" class="modal hide">
+    <div class="modal-content frosted-glass">
+      <div class="modal-header">
+        <h3>Hızlı İşlemler</h3>
+        <button class="btn-close" onclick="document.getElementById('ai-modal').classList.add('hide')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="ai-actions">
+          <button class="btn btn-primary" data-action="improve">Metni Ortala Güzelleştir</button>
+          <button class="btn btn-primary" data-action="summarize">Özet Çıkar</button>
+          <button class="btn btn-primary" data-action="continue">Yazmaya Devam Et</button>
+        </div>
+        <div id="ai-result" class="ai-result hide">
+          <div class="result-label">AI Sonucu:</div>
+          <div class="result-text">
+            <div id="ai-text"></div><br><button id="btn-ai-apply" class="btn btn-primary btn-sm">Metne Uygula</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="history-modal" class="modal hide">
+    <div class="modal-content frosted-glass">
+      <div class="modal-header">
+        <h3>Versiyon Geçmişi</h3>
+        <button class="btn-close"
+          onclick="document.getElementById('history-modal').classList.add('hide')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="history-list" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="status-bar">
+    <div class="status-left">
+      <span id="word-count">0 Sözcük</span>
+      <span class="separator">|</span>
+      <span id="reading-time">0 dk okuma</span>
+      <span class="separator">|</span>
+      <span id="difficulty-score">Zorluk: Orta</span>
+      <span class="separator">|</span>
+      <span id="sentiment-score">Duygu: Nötr</span>
+    </div>
+    <div class="status-right" style="display:flex; align-items:center; gap:10px;">
+      <div class="goal-container" title="Hedef belirlemek için tıklayın">
+        <div class="goal-bar">
+          <div class="goal-progress" id="goal-progress"></div>
+        </div>
+        <span id="goal-text">Hedef: 500 Kelime</span>
+      </div>
+      <span id="zoom-indicator">100%</span>
+    </div>
+  </footer>
+
+  <div id="presentation-view" class="presentation-view hide">
+    <button id="exit-presentation" class="btn-icon">&times;</button>
+    <div id="presentation-content"></div>
+    <div class="presentation-controls">
+      <button id="prev-slide" class="btn btn-secondary">Önceki</button>
+      <button id="next-slide" class="btn btn-primary">Sonraki</button>
+    </div>
+  </div>
+
+  <!-- Vault Password Modal -->
+  <div id="vault-modal" class="modal hide">
+    <div class="modal-content frosted-glass" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>Private Vault (Şifrele)</h3>
+        <button class="btn-close"
+          onclick="document.getElementById('vault-modal').classList.add('hide')">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align:center;">
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">Bu belgeyi şifrelerseniz parolayı
+          unutmanız durumunda veri kurtarılamaz.</p>
+        <input type="password" id="vault-password" placeholder="Şifrenizi girin..."
+          style="width:100%; padding:10px; margin-bottom:16px;">
+        <button id="btn-vault-confirm" class="btn btn-primary btn-block">Şifrele / Çöz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bi-directional Link Dropdown -->
+  <div id="link-dropdown" class="link-dropdown hide"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+  <script src="js/api.js"></script>
+  <script src="js/editor.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.error(err));
+      });
+    }
+  </script>
+</body>
+
+</html>
